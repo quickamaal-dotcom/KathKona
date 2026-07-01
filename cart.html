@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KathKona | Cart</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" href="images/Kathkona copy.jpg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+</head>
+
+<body>
+    <header id="header">
+
+
+        <nav class="navigation">
+            <a href="index.html" class="logo">
+                <img src="images/Kathkona copy.jpg" alt="logo" />
+            </a>
+            <input type="checkbox" class="menu-btn" id="menu-btn" />
+            <label for="menu-btn" class="menu-icon" aria-label="Toggle menu" aria-expanded="false">
+                <span class="nav-icon"></span>
+            </label>
+            <ul class="menu">
+                <li><a href="index.html#main-banner">Home</a></li>
+                <li><a href="index.html#category">Category</a></li>
+                <li><a href="index.html#new_product">Products</a></li>
+                <li><a href="index.html#clients">Testimonials</a></li>
+                <li><a href="index.html#blog">Blog</a></li>
+            </ul>
+            <div class="right-nav">
+                <a href="index.html" class="nav-search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </a>
+                <div class="user-menu">
+                    <a href="#" class="nav-user" id="login-trigger">
+                        <i class="fa-regular fa-user"></i>
+                    </a>
+                    <span class="nav-username" id="nav-username">Guest</span>
+                    <div class="user-menu-panel" id="user-menu-panel" aria-hidden="true">
+                        <div class="user-menu-header">
+                            <strong id="user-menu-name">Guest</strong>
+                            <span id="user-menu-phone">Log in to continue</span>
+                        </div>
+                        <div class="user-menu-body">
+                            <p><strong>Saved Address</strong></p>
+                            <p id="user-menu-address">No address saved yet.</p>
+                        </div>
+                        <button type="button" class="user-menu-change" id="user-menu-change">Manage Addresses</button>
+                        <button type="button" class="user-menu-logout" id="user-menu-logout">Log Out</button>
+                    </div>
+                </div>
+                <a href="cart.html" class="nav-cart">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span>0</span>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="cart-page">
+        <section class="cart-hero">
+            <h1>Your Cart</h1>
+            <p>Beautiful handmade pieces ready for you.</p>
+        </section>
+
+        <section class="cart-shell">
+            <div id="cart-items" class="cart-items"></div>
+            <aside class="cart-summary">
+                <h3>Cart Summary</h3>
+                <div class="summary-row">
+                    <span>Items</span>
+                    <strong id="summary-count">0</strong>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <strong id="summary-total">₹0.00</strong>
+                </div>
+                <a href="index.html" class="cart-btn secondary">Continue Shopping</a>
+                <button class="cart-btn primary" type="button" id="checkout-button">Checkout</button>
+                <div id="checkout-details" class="checkout-details hidden"></div>
+                <div id="payment-options" class="payment-options hidden">
+                    <h4>Payment Options</h4>
+                    <button type="button" class="cart-btn primary payment-option" data-method="upi">Pay with
+                        UPI</button>
+                    <button type="button" class="cart-btn secondary payment-option" data-method="cod">Cash on
+                        Delivery</button>
+                </div>
+                <button type="button" id="confirm-order-button" class="cart-btn primary hidden">Confirm Order</button>
+            </aside>
+        </section>
+    </main>
+
+    <div class="login-modal" id="login-modal" aria-hidden="true">
+        <div class="login-backdrop"></div>
+        <div class="login-panel">
+            <button class="login-close" id="login-close" aria-label="Close login form">×</button>
+            <div class="login-box">
+                <h2>Log in</h2>
+                <div class="auth-mode-toggle">
+                    <button type="button" class="auth-mode-btn active" id="auth-signup">Sign Up</button>
+                    <button type="button" class="auth-mode-btn" id="auth-login">Log In</button>
+                </div>
+                <p>Use your phone number or Google account to log in.</p>
+                <button type="button" class="google-signin" id="google-signin">
+                    <i class="fa-brands fa-google"></i> Log in with Google
+                </button>
+                <div class="login-divider"><span>or</span></div>
+                <label for="login-phone">Phone number</label>
+                <input type="tel" id="login-phone" placeholder="Enter phone number" />
+                <button type="button" class="phone-send" id="send-otp">Send OTP</button>
+                <div class="otp-step hidden" id="otp-step">
+                    <label for="login-otp">Enter OTP</label>
+                    <input type="text" id="login-otp" placeholder="123456" maxlength="6" />
+                    <button type="button" class="otp-verify" id="verify-otp">Verify OTP</button>
+                </div>
+                <div id="recaptcha-container" class="recaptcha-container"></div>
+                <p class="login-message" id="login-message"></p>
+            </div>
+        </div>
+    </div>
+    <div class="address-modal" id="address-modal" aria-hidden="true">
+        <div class="address-backdrop"></div>
+        <div class="address-panel" role="dialog" aria-modal="true" aria-labelledby="address-modal-title">
+            <button type="button" class="address-close" id="address-close" aria-label="Close address form">×</button>
+            <div class="address-box">
+                <h2 id="address-modal-title">Shipping Address</h2>
+                <p>Please enter your delivery address below.</p>
+                <label for="address-name">Name</label>
+                <input type="text" id="address-name" placeholder="Full name" />
+                <label for="address-phone">Phone</label>
+                <input type="tel" id="address-phone" placeholder="Phone number" />
+                <label for="address-line">Address</label>
+                <textarea id="address-line" rows="3" placeholder="Street, building, landmark"></textarea>
+                <label for="address-city">City</label>
+                <input type="text" id="address-city" placeholder="City" />
+                <label for="address-pin">Pincode</label>
+                <input type="text" id="address-pin" placeholder="Postal code" />
+                <input type="hidden" id="address-id" value="" />
+                <div class="address-list-wrap">
+                    <div class="address-list" id="address-list"></div>
+                    <button type="button" class="address-add-new" id="address-add-new">Add New Address</button>
+                </div>
+                <button type="button" class="address-save" id="address-save">Save Address</button>
+                <p class="address-message" id="address-message"></p>
+            </div>
+        </div>
+    </div>
+    <div class="product-modal" id="product-modal" aria-hidden="true">
+        <div class="product-backdrop" id="product-backdrop"></div>
+        <div class="product-panel" role="dialog" aria-modal="true" aria-labelledby="product-modal-title">
+            <button type="button" class="product-modal-close" id="product-modal-close"
+                aria-label="Close product details">×</button>
+            <div class="product-image">
+                <img id="product-modal-image" src="" alt="Product detail image" />
+            </div>
+            <div class="product-info">
+                <h3 id="product-modal-title">Product Name</h3>
+                <div class="product-price" id="product-modal-price">₹0.00</div>
+                <p class="product-description">Explore the product details, set quantity, and order directly via
+                    WhatsApp.</p>
+                <div class="quantity-control">
+                </div>
+                <div class="product-total">
+                    <strong>Total:</strong> <span id="product-modal-total">₹0.00</span>
+                </div>
+                <div class="discount-tier-container">
+                    <button type="button" class="discount-tier-button" id="tier-button-5">
+                        <strong>Set of 5</strong>
+                        <span>5x90Rs</span>
+                    </button>
+                    <button type="button" class="discount-tier-button" id="tier-button-10">
+                        <strong>Set of 10</strong>
+                        <span>10x85Rs</span>
+                    </button>
+                    <button type="button" class="discount-tier-button" id="tier-button-15">
+                        <strong>Set of 15</strong>
+                        <span>15x80Rs</span>
+                    </button>
+                </div>
+                <div class="product-actions">
+                    <button type="button" class="add-to-cart" id="product-modal-add-cart">Add to Cart</button>
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="whatsapp-order"
+                        id="product-modal-whatsapp">Order via WhatsApp</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+</body>
+
+</html>
